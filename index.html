@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Downloader – Without Watermark</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease 0.1s backwards;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-wrapper input::placeholder {
+            color: #aaa;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            animation: slideIn 0.3s ease;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            color: #065f46;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            animation: slideIn 0.3s ease;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 14px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .loading.show {
+            display: block;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .result-container {
+            margin-top: 24px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .video-info {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .video-details {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .video-details .author {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .video-details .title {
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TikTok Downloader</h1>
+            <p>Download videos without watermark</p>
+        </div>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="videoUrl">Enter TikTok Video URL</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="videoUrl" 
+                        placeholder="https://www.tiktok.com/@username/video/..."
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="downloadBtn">Download</button>
+
+            <div class="loading" id="loading">Processing...</div>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <div class="result-container" id="resultContainer">
+                <div class="video-info" id="videoInfo"></div>
+                <button class="btn btn-success" id="finalDownloadBtn">Download Video</button>
+            </div>
+
+            <div class="footer">
+                © Siegfried Samá
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const videoUrlInput = document.getElementById('videoUrl');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const resultContainer = document.getElementById('resultContainer');
+        const videoInfo = document.getElementById('videoInfo');
+        const finalDownloadBtn = document.getElementById('finalDownloadBtn');
+
+        let downloadUrl = null;
+
+        downloadBtn.addEventListener('click', fetchVideo);
+        videoUrlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') fetchVideo();
+        });
+
+        function showError(message) {
+            hideSuccess();
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            hideError();
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 5000);
+        }
+
+        function hideError() {
+            errorMessage.classList.remove('show');
+        }
+
+        function hideSuccess() {
+            successMessage.classList.remove('show');
+        }
+
+        function showLoading() {
+            loading.classList.add('show');
+            downloadBtn.disabled = true;
+        }
+
+        function hideLoading() {
+            loading.classList.remove('show');
+            downloadBtn.disabled = false;
+        }
+
+        function isValidTikTokUrl(url) {
+            const patterns = [
+                /tiktok\.com\/@[\w.-]+\/video\/\d+/,
+                /vt\.tiktok\.com\/[\w-]+/,
+                /vm\.tiktok\.com\/[\w-]+/,
+                /tiktok\.com\/t\/[\w-]+/
+            ];
+            return patterns.some(pattern => pattern.test(url));
+        }
+
+        async function fetchVideo() {
+            const url = videoUrlInput.value.trim();
+            
+            hideError();
+            hideSuccess();
+            resultContainer.classList.remove('show');
+
+            if (!url) {
+                showError('Please enter a TikTok video URL.');
+                return;
+            }
+
+            if (!isValidTikTokUrl(url)) {
+                showError('Invalid TikTok link. Please enter a valid TikTok video URL.');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const apiUrl = `https://kryptonite-api-library.onrender.com/api/tikdl-v2?url=${encodeURIComponent(url)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                console.log('API Response:', data);
+
+                if (data && data.play) {
+                    downloadUrl = data.play;
+                    
+                    displayVideoInfo(data);
+                    
+                    hideLoading();
+                    resultContainer.classList.add('show');
+                } else {
+                    showError('No download link available for this video.');
+                    hideLoading();
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to fetch video. Please try again.');
+                hideLoading();
+            }
+        }
+
+        function displayVideoInfo(data) {
+            const author = data.author?.nickname || data.author?.unique_id || 'Unknown';
+            const title = data.title || 'No title available';
+            const thumbnail = data.thumbnail || '';
+
+            let infoHtml = '';
+            
+            if (thumbnail) {
+                infoHtml += `<img src="${thumbnail}" alt="Video thumbnail" class="video-thumbnail">`;
+            }
+
+            infoHtml += `
+                <div class="video-details">
+                    <div class="author">@${author}</div>
+                    <div class="title">${title}</div>
+                </div>
+            `;
+
+            videoInfo.innerHTML = infoHtml;
+        }
+
+        finalDownloadBtn.addEventListener('click', () => {
+            if (downloadUrl) {
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'tiktok_video.mp4';
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                showSuccess('Download started! If download doesn\'t start automatically, the video will open in a new tab where you can save it.');
+            }
+        });
+    </script>
+</body>
+</html>
