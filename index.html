@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TikTok Downloader – Without Watermark</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,10 +15,11 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -24,32 +28,57 @@
         .container {
             width: 100%;
             max-width: 520px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            animation: fadeIn 0.5s ease;
+            margin-bottom: 32px;
         }
 
-        .header h1 {
-            color: #ffffff;
+        .tiktok-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #000000 0%, #ee1d52 50%, #69c9d0 100%);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(238, 29, 82, 0.3);
+        }
+
+        .tiktok-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: #fff;
+        }
+
+        h1 {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 8px;
+            color: #1c1e21;
         }
 
-        .header p {
-            color: rgba(255, 255, 255, 0.9);
+        .subtitle {
             font-size: 15px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.5s ease 0.1s backwards;
+            color: #65676b;
         }
 
         .input-group {
@@ -58,112 +87,110 @@
 
         .input-group label {
             display: block;
-            color: #333;
+            color: #1c1e21;
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 8px;
         }
 
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper input {
+        input[type="text"] {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 16px 20px;
+            border: 2px solid #e4e6eb;
+            border-radius: 12px;
             font-size: 15px;
+            font-family: 'Inter', sans-serif;
             transition: all 0.3s ease;
+            background: #f5f6f7;
+        }
+
+        input[type="text"]:focus {
             outline: none;
+            border-color: #69c9d0;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(105, 201, 208, 0.1);
         }
 
-        .input-wrapper input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .input-wrapper input::placeholder {
-            color: #aaa;
+        input[type="text"]::placeholder {
+            color: #8a8d91;
         }
 
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
+            background: linear-gradient(135deg, #000000 0%, #ee1d52 50%, #69c9d0 100%);
+            color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.3s ease;
-            outline: none;
+            box-shadow: 0 4px 12px rgba(238, 29, 82, 0.4);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
-        .btn-primary:hover:not(:disabled) {
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(238, 29, 82, 0.5);
         }
 
-        .btn-primary:active:not(:disabled) {
+        .btn:active {
             transform: translateY(0);
         }
 
-        .btn-primary:disabled {
-            opacity: 0.6;
+        .btn:disabled {
+            background: linear-gradient(135deg, #b8b8b8 0%, #8f8f8f 100%);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn-success {
-            background: #10b981;
-            color: #ffffff;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
         }
 
-        .btn-success:hover:not(:disabled) {
-            background: #059669;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        .btn-success:hover {
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
         }
 
-        .error-message {
-            background: #fee2e2;
-            border-left: 4px solid #ef4444;
-            color: #991b1b;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-top: 16px;
-            font-size: 14px;
-            animation: slideIn 0.3s ease;
-            display: none;
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
         }
 
-        .error-message.show {
-            display: block;
-        }
-
-        .success-message {
-            background: #d1fae5;
-            border-left: 4px solid #10b981;
-            color: #065f46;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-top: 16px;
-            font-size: 14px;
-            animation: slideIn 0.3s ease;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .loading {
             text-align: center;
-            color: #667eea;
+            color: #65676b;
             font-size: 14px;
             margin-top: 16px;
             display: none;
@@ -171,13 +198,59 @@
 
         .loading.show {
             display: block;
-            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .error-message {
+            color: #e41e3f;
+            background: #ffebee;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .success-message {
+            color: #00a400;
+            background: #d1fae5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .result-container {
             margin-top: 24px;
             display: none;
-            animation: fadeIn 0.4s ease;
+            animation: slideIn 0.4s ease;
         }
 
         .result-container.show {
@@ -185,7 +258,7 @@
         }
 
         .video-info {
-            background: #f9fafb;
+            background: #f5f6f7;
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 16px;
@@ -193,8 +266,16 @@
 
         .video-thumbnail {
             width: 100%;
+            height: 200px;
+            object-fit: cover;
             border-radius: 8px;
             margin-bottom: 12px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .video-details {
@@ -204,62 +285,49 @@
 
         .video-details .author {
             font-weight: 600;
-            color: #333;
+            color: #1c1e21;
             margin-bottom: 4px;
         }
 
         .video-details .title {
-            color: #666;
+            color: #65676b;
             line-height: 1.4;
         }
 
-        .footer {
+        footer {
+            width: 100%;
             text-align: center;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-            color: #9ca3af;
-            font-size: 12px;
+            padding: 20px;
+            font-size: 13px;
+            color: #65676b;
+            margin-top: 20px;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .card {
-                padding: 24px 20px;
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 24px;
             }
 
-            .header h1 {
+            h1 {
                 font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            input[type="text"], .btn {
+                font-size: 14px;
+            }
+
+            .tiktok-icon {
+                width: 56px;
+                height: 56px;
+            }
+
+            .tiktok-icon svg {
+                width: 32px;
+                height: 32px;
             }
         }
     </style>
@@ -267,39 +335,40 @@
 <body>
     <div class="container">
         <div class="header">
+            <div class="tiktok-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                </svg>
+            </div>
             <h1>TikTok Downloader</h1>
-            <p>Download videos without watermark</p>
+            <p class="subtitle">Download videos without watermark in HD</p>
         </div>
 
-        <div class="card">
-            <div class="input-group">
-                <label for="videoUrl">Enter TikTok Video URL</label>
-                <div class="input-wrapper">
-                    <input 
-                        type="text" 
-                        id="videoUrl" 
-                        placeholder="https://www.tiktok.com/@username/video/..."
-                        autocomplete="off"
-                    >
-                </div>
-            </div>
+        <div class="input-group">
+            <label for="videoUrl">Enter TikTok Video URL</label>
+            <input 
+                type="text" 
+                id="videoUrl" 
+                placeholder="https://www.tiktok.com/@username/video/..."
+                autocomplete="off"
+            >
+        </div>
 
-            <button class="btn btn-primary" id="downloadBtn">Download</button>
+        <button class="btn" id="downloadBtn">Download</button>
 
-            <div class="loading" id="loading">Processing...</div>
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
+        <div class="loading" id="loading">⏳ Processing...</div>
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
 
-            <div class="result-container" id="resultContainer">
-                <div class="video-info" id="videoInfo"></div>
-                <button class="btn btn-success" id="finalDownloadBtn">Download Video</button>
-            </div>
-
-            <div class="footer">
-                © Siegfried Samá
-            </div>
+        <div class="result-container" id="resultContainer">
+            <div class="video-info" id="videoInfo"></div>
+            <button class="btn btn-success" id="finalDownloadBtn">📥 Download Video</button>
         </div>
     </div>
+
+    <footer>
+        © 2026 | Siegfried Samá
+    </footer>
 
     <script>
         const videoUrlInput = document.getElementById('videoUrl');
@@ -320,7 +389,7 @@
 
         function showError(message) {
             hideSuccess();
-            errorMessage.textContent = message;
+            errorMessage.textContent = '❌ ' + message;
             errorMessage.classList.add('show');
             setTimeout(() => {
                 errorMessage.classList.remove('show');
@@ -329,7 +398,7 @@
 
         function showSuccess(message) {
             hideError();
-            successMessage.textContent = message;
+            successMessage.textContent = '✅ ' + message;
             successMessage.classList.add('show');
             setTimeout(() => {
                 successMessage.classList.remove('show');
@@ -347,11 +416,13 @@
         function showLoading() {
             loading.classList.add('show');
             downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '<span class="spinner"></span>Processing...';
         }
 
         function hideLoading() {
             loading.classList.remove('show');
             downloadBtn.disabled = false;
+            downloadBtn.textContent = 'Download';
         }
 
         function isValidTikTokUrl(url) {
